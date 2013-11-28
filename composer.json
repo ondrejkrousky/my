@@ -1,0 +1,14 @@
+{
+	"name": "my/framework",
+	"description": "Framework built on top of Nette and inspired by Nella and Mulukaro.",
+	"type": "library",
+	"authors": [
+		{
+			"name": "Ondra Krouský"
+		}
+	],
+	"require": {
+		"php": ">= 5.4",
+		"nette/nette": "@dev"
+	}
+}
