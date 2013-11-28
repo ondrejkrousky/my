@@ -9,6 +9,7 @@
 	],
 	"require": {
 		"php": ">= 5.4",
-		"nette/nette": "@dev"
+		"nette/nette": "@dev",
+		"doctrine/orm": "2.5.*@dev"
 	}
 }
