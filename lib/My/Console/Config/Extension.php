@@ -60,7 +60,7 @@ class Extension extends \Nette\DI\CompilerExtension
 
 		if ($builder->hasDefinition('router') && $builder->hasDefinition($this->prefix('route'))) {
 			$builder->getDefinition('router')
-				->addSetup('offsetSet', array(NULL, $builder->getDefinition($this->prefix('route'))));
+				->addSetup('offsetSet', array(0, $builder->getDefinition($this->prefix('route'))));
 		}
 	}
 

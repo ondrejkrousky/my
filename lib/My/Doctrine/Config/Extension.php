@@ -1,16 +1,9 @@
 <?php
-/**
- * This file is part of the Nella Framework (http://nellafw.org).
- *
- * Copyright (c) 2006, 2012 Patrik Votoček (http://patrik.votocek.cz)
- *
- * For the full copyright and license information,
- * please view the file LICENSE.txt that was distributed with this source code.
- */
 
-namespace Nella\Doctrine\Config;
 
-use Nella\Console\Config\Extension as CExtension,
+namespace My\Doctrine\Config;
+
+use My\Console\Config\Extension as CExtension,
 	Nette\Diagnostics\Debugger,
 	Nette\Config\Compiler,
 	Nette\Config\Configurator,
@@ -83,7 +76,7 @@ class Extension extends \Nette\DI\CompilerExtension
 		\Nette\DI\Compiler::parseServices($builder, $config, $this->name);
 
 		$cache = $builder->addDefinition($this->prefix('cache'))
-			->setClass('Nella\Doctrine\Cache', array('@cacheStorage'));
+			->setClass('My\Doctrine\Cache', array('@cacheStorage'));
 
 		if ($config['debugger'] === NULL) {
 			$config['debugger'] = $builder->parameters['debugMode'];
@@ -98,7 +91,6 @@ class Extension extends \Nette\DI\CompilerExtension
 		if (isset($config['eventManager']) && $config['eventManager']) {
 			$evm->setFactory($config['eventManager']);
 		}
-
 		$connection = $builder->addDefinition($this->prefix('connection'))
 			->setClass('Doctrine\DBAL\Connection')
 			->setFactory(get_called_class().'::createConnection', array($config, $evm));
