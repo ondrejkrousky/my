@@ -48,20 +48,20 @@ class Extension extends \Nette\DI\CompilerExtension
 		switch ($config['route']) {
 			case 'normal':
 				$builder->addDefinition($this->prefix('route'))
-					->setClass('My\Console\Router', array($application));
-				//	->setAutowired(FALSE);
+					->setClass('My\Console\Router', array($application))
+					->setAutowired(FALSE);
 				break;
 			case 'lazy':
 				$builder->addDefinition($this->prefix('route'))
-					->setClass('My\Console\LazyRouter', array('@container'));
-				//	->setAutowired(FALSE);
+					->setClass('My\Console\LazyRouter', array('@container'))
+					->setAutowired(FALSE);
 				break;
 		}
 
-		if ($builder->hasDefinition('router') && $builder->hasDefinition($this->prefix('route'))) {
+		/*if ($builder->hasDefinition('router') && $builder->hasDefinition($this->prefix('route'))) {
 			$builder->getDefinition('router')
 				->addSetup('offsetSet', array(0, $builder->getDefinition($this->prefix('route'))));
-		}
+		}*/
 	}
 
 	/**
