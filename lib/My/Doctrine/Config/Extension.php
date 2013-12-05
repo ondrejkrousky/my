@@ -25,6 +25,7 @@ class Extension extends \Nette\DI\CompilerExtension
 	public $defaults = array(
 		'debugger' => NULL, // NULL => as param debugMode
 		'connection' => array(
+			'driver' => 'mysql',
 			'collation' => FALSE,
 			'autowired' => FALSE,
 		),
