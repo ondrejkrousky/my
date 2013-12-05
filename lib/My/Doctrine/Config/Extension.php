@@ -23,27 +23,27 @@ class Extension extends \Nette\DI\CompilerExtension
 		EVENT_TAG_NAME = 'doctrineEvent';
 
 	public $defaults = array(
-		'debugger' => NULL,
+		'debugger' => NULL, // NULL => as param debugMode
 		'connection' => array(
 			'collation' => FALSE,
 			'autowired' => FALSE,
 		),
-		'eventManager' => NULL,
-		'metadataDriver' => NULL,
-		'useSimleAnnotation' => FALSE,
-		'autowired' => TRUE,
+		'eventManager' => NULL, // use default eventManager
+		'metadataDriver' => NULL, // use default metadata driver 
+		'useSimleAnnotation' => FALSE, // default use Annotations with namespace
+		//'autowired' => TRUE,
 		'entityDirs' => array('%appDir%'),
 		'proxy' => array(
 			'dir' => '%appDir%/proxies',
 			'namespace' => 'App\Model\Proxies',
-			'autogenerate' => NULL,
+			'autogenerate' => NULL, // NULL => as param debugMode
 		),
-		'repositoryClass' => 'Nella\Doctrine\Repository',
-		'annotationCacheDriver' => TRUE,
+		'repositoryClass' => NULL,  // use Doctrine default
+		'annotationCacheDriver' => TRUE, // use Nette cache
 		'metadataCacheDriver' => TRUE,
 		'queryCacheDriver' => TRUE,
-		'resultCacheDriver' => NULL,
-		'console' => FALSE,
+		'resultCacheDriver' => NULL, // without caching
+		'console' => TRUE, // create console commands
 	);
 
 	/**
@@ -53,9 +53,9 @@ class Extension extends \Nette\DI\CompilerExtension
 	{
 		if (!class_exists('Doctrine\ORM\Version')) {
 			throw new \Nette\InvalidStateException('Doctrine ORM does not exists');
-		} elseif (\Doctrine\ORM\Version::compare('2.3.0-RC3') > 0) {
+		} elseif (\Doctrine\ORM\Version::compare('2.4.0-RC3') > 0) {
 			throw new \Nette\InvalidStateException(
-				'Doctrine version ' . \Doctrine\ORM\Version::VERSION . ' not supported (support only for 2.3+)'
+				'Doctrine version ' . \Doctrine\ORM\Version::VERSION . ' not supported (support only for 2.4+)'
 			);
 		}
 	}
@@ -91,6 +91,7 @@ class Extension extends \Nette\DI\CompilerExtension
 		if (isset($config['eventManager']) && $config['eventManager']) {
 			$evm->setFactory($config['eventManager']);
 		}
+		
 		$connection = $builder->addDefinition($this->prefix('connection'))
 			->setClass('Doctrine\DBAL\Connection')
 			->setFactory(get_called_class().'::createConnection', array($config, $evm));
@@ -109,7 +110,7 @@ class Extension extends \Nette\DI\CompilerExtension
 				));
 
 			$builder->addDefinition('discriminatorDiscovery')
-				->setClass('Nella\Doctrine\Listeners\DiscriminatorMapDiscovery', array($reader))
+				->setClass('My\Doctrine\Listeners\DiscriminatorMapDiscovery', array($reader))
 				->addTag(static::EVENT_TAG_NAME);
 
 			$metadataDriver->setClass('Doctrine\ORM\Mapping\Driver\AnnotationDriver', array($reader, $config['entityDirs']));
@@ -121,10 +122,12 @@ class Extension extends \Nette\DI\CompilerExtension
 		$configuration = $builder->addDefinition($this->prefix('configuration'))
 			->setClass('Doctrine\ORM\Configuration')
 			->addSetup('setMetadataDriverImpl', array($metadataDriver))
-			->addSetup('setDefaultRepositoryClassName', array($config['repositoryClass']))
 			->addSetup('setProxyDir', array($config['proxy']['dir']))
 			->addSetup('setProxyNamespace', array($config['proxy']['namespace']))
 			->addSetup('setAutoGenerateProxyClasses', array($config['proxy']['autogenerate']));
+		if($config['repositoryClass']){
+			$configuration->addSetup('setRepositoryClass', array($config['repositoryClass']));
+		}
 
 		if ($config['metadataCacheDriver']) {
 			$configuration->addSetup('setMetadataCacheImpl', array(
@@ -157,7 +160,7 @@ class Extension extends \Nette\DI\CompilerExtension
 	 */
 	protected function processConsole($entityManager = NULL, $connection = NULL)
 	{
-		if (!class_exists('Nella\Console\Config\Extension')) {
+		if (!class_exists('My\Console\Config\Extension')) {
 			throw new \Nette\InvalidStateException('Missing console extension');
 		}
 
@@ -231,7 +234,7 @@ class Extension extends \Nette\DI\CompilerExtension
 		$config = new \Doctrine\DBAL\Configuration;
 
 		if (isset($params['debugger']) && $params['debugger'] === TRUE) {
-			$panel = new \Nella\Doctrine\Diagnostics\ConnectionPanel;
+			$panel = new \My\Doctrine\Diagnostics\ConnectionPanel;
 			if (Debugger::$bar) {
 				Debugger::$bar->addPanel($panel);
 			}
