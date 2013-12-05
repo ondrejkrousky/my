@@ -45,9 +45,9 @@ class MigrationsExtension extends \Nette\DI\CompilerExtension
 	 */
 	public function loadConfiguration()
 	{
-		if (!$this->getConfig()) { // ignore migrations if config section not exist
+		/*if (!$this->getConfig()) { // ignore migrations if config section not exist
 			return;
-		}
+		}*/
 
 		$config = $this->getConfig($this->getDefaults());
 		$builder = $this->getContainerBuilder();
