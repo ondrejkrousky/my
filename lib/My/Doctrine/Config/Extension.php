@@ -25,7 +25,7 @@ class Extension extends \Nette\DI\CompilerExtension
 	public $defaults = array(
 		'debugger' => NULL, // NULL => as param debugMode
 		'connection' => array(
-			'driver' => 'mysql',
+			'driver' => 'pdo_mysql',
 			'collation' => FALSE,
 			'autowired' => FALSE,
 		),
