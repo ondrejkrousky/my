@@ -198,7 +198,15 @@ class Extension extends \Nette\DI\CompilerExtension
 			->setClass('Doctrine\ORM\Tools\Console\Command\RunDqlCommand')
 			->addTag(CExtension::COMMAND_TAG_NAME)
 			->setAutowired(FALSE);
-
+		$builder->addDefinition($this->prefix('consoleCommandInfo'))
+			->setClass('Doctrine\ORM\Tools\Console\Command\InfoCommand')
+			->addTag(CExtension::COMMAND_TAG_NAME)
+			->setAutowired(FALSE);
+		$builder->addDefinition($this->prefix('consoleCommandValidateSchema'))
+			->setClass('Doctrine\ORM\Tools\Console\Command\ValidateSchemaCommand')
+			->addTag(CExtension::COMMAND_TAG_NAME)
+			->setAutowired(FALSE);
+		
 		if ($entityManager) {
 			$builder->addDefinition($this->prefix('consoleHelperEntityManager'))
 				->setClass('Doctrine\ORM\Tools\Console\Helper\EntityManagerHelper', array($entityManager))
