@@ -31,7 +31,7 @@ class MigrationsExtension extends \Nette\DI\CompilerExtension
 		return array(
 			'name' => $this->defaultName ?: \Nette\Framework::NAME . ' DB Migrations',
 			'connection' => '@' . Extension::DEFAULT_EXTENSION_NAME . '.connection', // @doctrine.connection
-			'table' => '_db_version',
+			'table' => '$db_version',
 			'directory' => '%appDir%/migrations',
 			'namespace' => 'App\Model\Migrations',
 			'console' => TRUE,
